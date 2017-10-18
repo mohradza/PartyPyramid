@@ -647,6 +647,406 @@ void rainbowCirclesInOut(uint8_t wait, int rainbowloops) {
 //        }
 //}
 
+void fill(uint16_t arr[], int arr_size, uint32_t c, uint8_t wait, bool showSequentially)
+{ 
+  for(int i = 0; i < arr_size; i++)
+  {
+    panel1.setPixelColor(i, c);
+    if(showSequentially)
+    {
+      panel1.show();
+      delay(wait);
+    }
+  }
+}
+
+void fill_and_show(uint16_t arr[], int arr_size, uint32_t c, uint8_t wait, bool showSequentially)
+{
+  fill(arr, arr_size, c, wait, showSequentially);
+  if(!showSequentially)
+  {
+    panel1.show();
+  }
+}
+
+void fill_show_and_delay(uint16_t arr[], int arr_size, uint32_t c, uint8_t wait, bool showSequentially)
+{
+  fill_and_show(arr, arr_size, c, wait, showSequentially);
+  if(!showSequentially)
+  {
+    delay(wait); 
+  }
+}
+
+void flip_all(uint32_t c1, uint32_t c2, uint8_t wait)
+{
+  const int all_size = 36;
+  uint16_t all [all_size] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35};
+  
+  fill_show_and_delay(all, all_size, c1, wait, false);
+  fill_show_and_delay(all, all_size, c2, wait, false);
+}
+
+void flip_all(uint32_t c1, uint32_t c2, int times, uint8_t wait)
+{
+  for(int i = 0; i < times; i++)
+  {
+    flip_all(c1, c2, wait);
+  }
+}
+
+void fill_two_arrays(uint16_t arr1[], int arr1_size, uint16_t arr2[], int arr2_size, uint32_t c1, uint32_t c2, uint8_t wait)
+{
+  fill(arr1, arr1_size, c1, wait, false);
+  fill(arr2, arr2_size, c2, wait, false);
+  panel1.show();
+  delay(wait);
+}
+
+void flip_arrays(uint16_t arr1[], int arr1_size, uint16_t arr2[], int arr2_size, uint32_t c1, uint32_t c2, uint8_t wait)
+{
+  fill_two_arrays(arr1, arr1_size, arr2, arr2_size, c1, c2, wait);
+  fill_two_arrays(arr2, arr2_size, arr1, arr1_size, c1, c2, wait);
+}
+
+void in_and_out(uint32_t c1, uint32_t c2, uint8_t wait)
+{
+  const int inside_size = 9;
+  uint16_t inside [inside_size] = {7, 14, 16, 25, 27, 29, 30, 32, 33};
+  
+  const int outside_size = 27;
+  uint16_t outside [outside_size] = {0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 15, 17, 18, 19, 20, 21, 22, 23, 24, 26, 28, 31, 34, 35};
+
+  flip_arrays(inside, inside_size, outside, outside_size, c1, c2, wait);
+}
+
+void in_and_out(uint32_t c1, uint32_t c2, int times, uint8_t wait)
+{
+  for(int i = 0; i < times; i++)
+  {
+    in_and_out(c1, c2, wait);
+  }
+}
 
 
+void every_other(uint32_t c1, uint32_t c2, uint8_t wait)
+{
+  const int every_size = 21;
+  uint16_t every[every_size] = {0, 2, 4, 6, 8, 10, 3, 29, 7, 33, 11, 12, 14, 16, 18, 15, 25, 19, 20, 22, 23};
+  
+  const int other_size = 15;
+  uint16_t other [other_size] = {1, 31, 5, 35, 9, 28, 30, 32, 34, 13, 27, 17, 24, 26, 21};
+
+  flip_arrays(every, every_size, other, other_size, c1, c2, wait);
+}
+
+void every_other(uint32_t c1, uint32_t c2, int times, uint8_t wait)
+{
+  for(int i = 0; i < times; i++)
+  {
+    every_other(c1, c2, wait);
+  }
+}
+
+void alternate_fill(uint32_t c1, uint8_t c2, uint8_t wait)
+{
+  const int every_size = 21;
+  uint16_t every[every_size] = {0, 2, 4, 6, 8, 10, 3, 29, 7, 33, 11, 12, 14, 16, 18, 15, 25, 19, 20, 22, 23};
+  
+  const int other_size = 15;
+  uint16_t other [other_size] = {1, 31, 5, 35, 9, 28, 30, 32, 34, 13, 27, 17, 24, 26, 21};
+  
+  bool showSequentially = true;
+  
+  fill(every, every_size, c1, wait, showSequentially);
+  fill(other, other_size, c1, wait, showSequentially);
+  
+  fill(every, every_size, c2, wait, showSequentially);
+  fill(other, other_size, c2, wait, showSequentially);
+}
+
+void alternate_fill(uint32_t c1, uint8_t c2, int times, uint8_t wait)
+{
+  for(int i = 0; i < times; i++)
+  {
+    alternate_fill(c1, c2, wait);
+  }
+}
+
+void nine_triangle_sequential_fill(uint32_t c1, uint8_t c2, uint8_t wait)
+{
+  const int t_size = 4;
+  uint16_t t0 [t_size] = {0, 1, 2, 3};
+  uint16_t t1 [t_size] = {4, 5, 6, 7};
+  uint16_t t2 [t_size] = {8, 9, 10, 11};
+  uint16_t t3 [t_size] = {12, 13, 14, 15};
+  uint16_t t4 [t_size] = {16, 17, 18, 19};
+  uint16_t t5 [t_size] = {20, 21, 22, 23};
+  uint16_t t6 [t_size] = {24, 25, 26, 27};
+  uint16_t t7 [t_size] = {28, 29, 30, 31};
+  uint16_t t8 [t_size] = {32, 33, 34, 35};
+  
+  bool showSequentially = true;
+
+  // if you wanna make sure everything is c2 before filling with c1
+  // fill_and_show(t0, t_size, c2, 0, !showSequentially)
+  
+  fill(t0, t_size, c1, wait, showSequentially);
+  fill(t1, t_size, c1, wait, showSequentially);
+  fill(t2, t_size, c1, wait, showSequentially);
+  fill(t3, t_size, c1, wait, showSequentially);
+  fill(t4, t_size, c1, wait, showSequentially);
+  fill(t5, t_size, c1, wait, showSequentially);
+  fill(t6, t_size, c1, wait, showSequentially);
+  fill(t7, t_size, c1, wait, showSequentially);
+  fill(t8, t_size, c1, wait, showSequentially);
+
+  fill(t0, t_size, c2, wait, showSequentially);
+  fill(t1, t_size, c2, wait, showSequentially);
+  fill(t2, t_size, c2, wait, showSequentially);
+  fill(t3, t_size, c2, wait, showSequentially);
+  fill(t4, t_size, c2, wait, showSequentially);
+  fill(t5, t_size, c2, wait, showSequentially);
+  fill(t6, t_size, c2, wait, showSequentially);
+  fill(t7, t_size, c2, wait, showSequentially);
+  fill(t8, t_size, c2, wait, showSequentially);
+}
+
+void nine_triangle_sequential_fill(uint32_t c1, uint8_t c2, int times, uint8_t wait)
+{
+  for(int i = 0; i < times; i++)
+  {
+    nine_triangle_sequential_fill(c1, c2, wait);
+  }
+}
+
+void fill_then_sequential_flip(uint16_t arr[], int arr_size, uint32_t c1, uint32_t c2, uint8_t wait)
+{
+  bool showSequentially = true;
+  fill_show_and_delay(arr, arr_size, c1, wait, !showSequentially);
+  fill(arr, arr_size, c2, wait, showSequentially);
+  fill(arr, arr_size, c1, wait, showSequentially);
+}
+
+void row_fill(uint16_t r0 [], int r0_size, 
+              uint16_t r1 [], int r1_size,
+              uint16_t r2 [], int r2_size,
+              uint16_t r3 [], int r3_size,
+              uint16_t r4 [], int r4_size,
+              uint16_t r5 [], int r5_size,
+              uint32_t c1, uint8_t c2, uint8_t wait)
+{
+  bool showSequentially = true;
+  
+  // if you wanna make sure everything is c2 before filling with c1
+  // fill_and_show(t0, t_size, c2, 0, !showSequentially)
+
+  fill_then_sequential_flip(r0, r0_size, c1, c2, wait);
+  fill_then_sequential_flip(r1, r1_size, c1, c2, wait);
+  fill_then_sequential_flip(r2, r2_size, c1, c2, wait);
+  fill_then_sequential_flip(r3, r3_size, c1, c2, wait);
+  fill_then_sequential_flip(r4, r4_size, c1, c2, wait);
+  fill_then_sequential_flip(r4, r5_size, c1, c2, wait);
+}
+
+void row_fill(uint16_t r0 [], int r0_size, 
+              uint16_t r1 [], int r1_size,
+              uint16_t r2 [], int r2_size,
+              uint16_t r3 [], int r3_size,
+              uint16_t r4 [], int r4_size,
+              uint16_t r5 [], int r5_size,
+              uint32_t c1, uint8_t c2, int times, uint8_t wait)
+{
+  for(int i = 0; i < times; i++)
+  {
+    row_fill(r0, r0_size, r1, r1_size, r2, r2_size, r3, r3_size, r4, r4_size, r5, r5_size, c1, c2, wait);
+  }
+}
+
+void bottom_up(uint32_t c1, uint8_t c2, uint8_t wait)
+{
+  const int r0_size = 11;
+  uint16_t r0 [r0_size] = {0, 1, 2, 31, 4, 5, 6, 35, 8, 9, 10};
+
+  const int r1_size = 9;
+  uint16_t r1 [r1_size] = {3, 28, 29, 30, 7, 32, 33, 34, 11};
+
+  const int r2_size = 7;
+  uint16_t r2 [r2_size] = {12, 13, 14, 27, 16, 17, 18};
+
+  const int r3_size = 5;
+  uint16_t r3 [r3_size] = {15, 24, 25, 26, 19};
+
+  const int r4_size = 3;
+  uint16_t r4 [r4_size]= {20, 21, 22};
+
+  const int r5_size = 1;
+  uint16_t r5 [r5_size] = {23};
+
+  row_fill(r0, r0_size, r1, r1_size, r2, r2_size, r3, r3_size, r4, r4_size, r5, r5_size, c1, c2, wait);
+}
+
+void bottom_up(uint32_t c1, uint8_t c2, int times, uint8_t wait)
+{
+  for(int i = 0; i < times; i++)
+  {
+    bottom_up(c1, c2, wait);
+  }
+}
+
+void left_right(uint32_t c1, uint8_t c2, uint8_t wait)
+{
+  const int r0_size = 11;
+  uint16_t r0 [r0_size] = {0, 1, 3, 28, 12, 13, 15, 24, 20, 21, 23};
+
+  const int r1_size = 9;
+  uint16_t r1 [r1_size] = {2, 31, 29, 30, 14, 27, 25, 26, 22};
+
+  const int r2_size = 7;
+  uint16_t r2 [r2_size] = {4, 5, 7, 32, 16, 17, 19};
+
+  const int r3_size = 5;
+  uint16_t r3 [r3_size] = {6, 35, 33, 34, 18};
+
+  const int r4_size = 3;
+  uint16_t r4 [r4_size] = {8, 9, 11};
+
+  const int r5_size = 1;
+  uint16_t r5 [r5_size] = {10};
+
+  row_fill(r0, r0_size, r1, r1_size, r2, r2_size, r3, r3_size, r4, r4_size, r5, r5_size, c1, c2, wait);
+}
+
+void left_right(uint32_t c1, uint8_t c2, int times, uint8_t wait)
+{
+  for(int i = 0; i < times; i++)
+  {
+    left_right(c1, c2, wait);
+  }
+}
+
+void right_left(uint32_t c1, uint8_t c2, uint8_t wait)
+{
+  const int r0_size = 11;
+  uint16_t r0 [r0_size]  = {10, 9, 11, 34, 18, 17, 19, 26, 22, 21, 23};
+
+  const int r1_size = 9;
+  uint16_t r1 [r1_size] = {8, 35, 33, 32, 16, 27, 25, 24, 20};
+
+  const int r2_size = 7;
+  uint16_t r2 [r2_size] = {6, 5, 7, 30, 14, 13, 15};
+
+  const int r3_size = 5;
+  uint16_t r3 [r3_size] = {4, 31, 29, 28, 12};
+
+  const int r4_size = 3;
+  uint16_t r4 [r4_size] = {2, 1, 3};
+
+  const int r5_size = 1;
+  uint16_t r5 [r5_size] = {0};
+
+  row_fill(r0, r0_size, r1, r1_size, r2, r2_size, r3, r3_size, r4, r4_size, r5, r5_size, c1, c2, wait);
+}
+
+void right_left(uint32_t c1, uint8_t c2, int times, uint8_t wait)
+{
+  for(int i = 0; i < times; i++)
+  {
+    left_right(c1, c2, wait);
+  }
+}
+
+void jake_sequence(uint32_t c1, uint32_t c2)
+{
+  int small_times = 1;
+  int big_times = 4;
+
+  uint8_t small_wait = 1;
+  uint8_t big_wait = 4;
+
+  jake_sequence(c1, c2, small_times, big_times, small_wait, big_wait);
+}
+
+void jake_sequence(uint32_t c1, uint32_t c2, int small_times, int big_times, uint8_t small_wait, uint8_t big_wait)
+{
+  flip_all(c1, c2, big_times, big_wait / 2);
+  
+  in_and_out(c1, c2, big_times, big_wait);
+
+  every_other(c1, c2, big_times, big_wait);
+
+  flip_all(c1, c2, big_times, big_wait / 2);
+
+  alternate_fill(c1, c2, big_times, small_wait);
+
+  nine_triangle_sequential_fill(c1, c2, big_times, small_wait);
+
+  bottom_up(c1, c2, small_times, big_wait);
+
+  left_right(c1, c2, small_times, big_wait);
+
+  right_left(c1, c2, small_times, big_wait);
+}
+
+void jake_sequence(uint32_t c)
+{
+  jake_sequence(c, panel1.Color(0, 0, 0, 255));
+}
+
+void jake_sequence()
+{
+  jake_sequence(panel1.Color(0, 0, 0, 255), panel1.Color(255, 255, 255));
+}
+
+void start_jake_sequence(uint32_t color_array[], int color_array_size)
+{
+  uint32_t c1 = color_array[random(0, color_array_size - 1)];
+  uint32_t c2 = color_array[random(0, color_array_size - 1)];
+
+  while(c1 == c2 && color_array_size > 1)
+  {
+    c2 = color_array[random(0, color_array_size - 1)];
+  }
+
+  jake_sequence(c1, c2);
+}
+
+void start_jake_sequence(int i)
+{
+  switch(i)
+  {
+    case 0:// boring colors
+    {
+      const int boring_color_array_size = 5;
+      uint32_t boring_color_array [boring_color_array_size] =
+      {
+        panel1.Color(255, 0, 0),    // red
+        panel1.Color(0, 255, 0),    // blue
+        panel1.Color(0, 0, 255),    // green
+        panel1.Color(0, 0, 0, 255), // white?
+        panel1.Color(255, 255, 255) // black?
+      };
+      
+      start_jake_sequence(boring_color_array, boring_color_array_size);
+      break;
+    }
+    case 1: // vaporwave-ish ?
+    {
+      const int vaporwave_color_array_size = 3;
+      uint32_t vaporwave_color_array [vaporwave_color_array_size] =
+      {
+        panel1.Color(21,123,245), // blue 
+        panel1.Color(242,38,240), // magenta
+        panel1.Color(251,246,54)  // golden fizz
+      };
+      
+      start_jake_sequence(vaporwave_color_array, vaporwave_color_array_size);
+      break;
+    }
+    default:
+    {
+      break;
+    } 
+  }
+}
 
